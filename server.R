@@ -22,22 +22,22 @@ shinyServer(function(input, output,session) {
     if (is.null(inFile))
       return(NULL)
     
-    links <- read.csv(inFile$datapath, header=input$header, sep=input$sep, 
+    dsg_input <- read.csv(inFile$datapath, header=input$header, sep=input$sep, 
                       quote=input$quote)
-    Mapper <- graph.data.frame(links,directed=TRUE)
-    edge_list <- as.data.frame(unique(sort(links$Edge_Label)))
+    DSG <- graph.data.frame(dsg_input,directed=TRUE)
+    edge_list <- as.data.frame(unique(sort(dsg_input$Edge_Label)))
     options <- c()
     for (index in edge_list[,1]) { options = c(options,c(index,index))}
     updateSelectInput(session, 'thread', choices = options)    
     
-    col_levels <- levels(links$Source)
-    V(Mapper)$size       <- 8
-    V(Mapper)$label.cex  <- 1
-    V(Mapper)$label.dist <- 1
-    V(Mapper)$color      <- get_color(which(col_levels %in% links[V(Mapper),2]))
+    col_levels <- levels(dsg_input$Source)
+    V(DSG)$size       <- 8
+    V(DSG)$label.cex  <- 1
+    V(DSG)$label.dist <- 1
+    V(DSG)$color      <- get_color(which(col_levels %in% dsg_input[V(DSG),2]))
     par(mar=rep(0,4))
    
-    plot.igraph(Mapper,layout=layout.auto(Mapper))
+    plot.igraph(DSG,layout=layout.kamada.kawai(DSG))
   })
   output$ThreadPlot <- renderPlot({
     inFile <- input$file1
@@ -45,15 +45,16 @@ shinyServer(function(input, output,session) {
     if (is.null(inFile))
       return(NULL)
     
-    links <- read.csv(inFile$datapath, header=input$header, sep=input$sep, 
+    dsg_input <- read.csv(inFile$datapath, header=input$header, sep=input$sep, 
                       quote=input$quote)
     point_of_origin = 0
-    g <- graph.data.frame(links[links$Edge_Label==input$thread,],directed=TRUE)    
-    V(g)$size       <- 10
-    V(g)$color      <- "green"
-    V(g)$label.cex  <- 1
-    V(g)$label.dist <- 1
-    E(g)$color      <- "black"
-    plot(g)
+    dsg <- graph.data.frame(dsg_input[dsg_input$Edge_Label==input$thread,],directed=TRUE)    
+    V(dsg)$size       <- 10
+    V(dsg)$color      <- "green"
+    V(dsg)$label.cex  <- 1
+    V(dsg)$label.dist <- 1
+    E(dsg)$color      <- "black"
+    plot.igraph(dsg,layout=layout.fruchterman.reingold(dsg))
+    
   })
 })

@@ -7,4 +7,6 @@ In a Level 1 Data Structure Graph, the atomic Entities are the Entities from an 
 
 One of the key differences with these traditional methods and a Data Structure Graph is the two diagrams are represented mathematically as a network or graph. This allows us to do some level of structural analysis of the way data moves through either an organization or a particular database.
 
+This is hosted on the shinyapps server at: https://dougneedham.shinyapps.io/DataStructureGraph
+
 
